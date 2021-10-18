@@ -8,22 +8,37 @@ using Xunit;
 
 namespace ExampleTestProject
 {
-  public class FibonacciTests : IDisposable
+  // Created once, shared among all tests in class
+  public class FibonacciFixture
+  {
+    private Fibonacci impl = null;
+    public Fibonacci GetImpl()
+    {
+      if (impl == null)
+      {
+        impl = new FibonacciImpl1();
+      }
+      return impl;
+    }
+  }
+
+  public class FibonacciTests : IDisposable, IClassFixture<FibonacciFixture>
   {
 
     private Fibonacci impl;
 
-    public FibonacciTests()
+    public FibonacciTests(FibonacciFixture fix)
     {
-      impl = new FibonacciImpl1();
+      impl = fix.GetImpl();
+      //impl = new FibonacciImpl2();
     }
 
     public void Dispose()
     {
-      // Dispose of impl if necessary
+      // Dispose of resources if necessary
     }
 
-    private static int[] _CorrectFibs = new int[] { 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765 };
+    private static readonly int[] _CorrectFibs = new int[] { 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765 };
     public static IEnumerable<object[]> GetValidTestData()
     {
       for (int i = 0; i < 21; i++)
