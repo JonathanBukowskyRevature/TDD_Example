@@ -1,5 +1,6 @@
 ﻿using ExampleImplementation.Fibonacci;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,8 @@ namespace ExampleTestProject
     {
       if (impl == null)
       {
-        impl = new FibonacciImpl1();
+        //impl = new FibonacciImpl1();
+        impl = new FibonacciImpl3();
       }
       return impl;
     }
@@ -30,7 +32,7 @@ namespace ExampleTestProject
     public FibonacciTests(FibonacciFixture fix)
     {
       impl = fix.GetImpl();
-      //impl = new FibonacciImpl2();
+      //impl = new FibonacciImpl3();
     }
 
     public void Dispose()
@@ -38,16 +40,21 @@ namespace ExampleTestProject
       // Dispose of resources if necessary
     }
 
+    /// <summary>
+    /// Get correct fibonacci numbers up to *length*
+    /// </summary>
+    /// <param name="length"></param>
+    /// <returns></returns>
     private static IEnumerable<long> GetCorrectFibs(int length)
     {
       int i = 0;
-      int a = 0;
-      int b = 1;
+      long a = 0;
+      long b = 1;
       if (length < 1) yield break;
       yield return a;
       if (length < 1) yield break;
       yield return b;
-      int c;
+      long c;
       do
       {
         c = a + b;
@@ -60,7 +67,7 @@ namespace ExampleTestProject
     public static IEnumerable<object[]> GetValidTestData()
     {
       int i = 0;
-      foreach (var fib in GetCorrectFibs(1000))
+      foreach (var fib in GetCorrectFibs(CorrectFibs.LENGTH))
       {
         yield return new object[] { i++, fib };
       }
@@ -78,10 +85,26 @@ namespace ExampleTestProject
       Assert.Equal(correctResult, result);
     }
 
+    [Theory]
+    [ClassData(typeof(CorrectFibs))]
+    public void Correct_Number_Fibonacci_n_2(int n, long correctResult)
+    {
+      var result = impl.GetFibonacci(n);
+      Assert.Equal(correctResult, result);
+    }
+
+
     [Fact]
     public void Correct_Fib_Number_7()
     {
       Assert.Equal(13L, impl.GetFibonacci(7));
+    }
+
+    [Fact]
+    public void Negative_Argument_Will_Throw()
+    {
+      Assert.Throws<ArgumentOutOfRangeException>(() => impl.GetFibonacci(-1));
+      Assert.Throws<ArgumentOutOfRangeException>(() => impl.GetFibonacci(-100));
     }
   }
 }
