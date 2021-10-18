@@ -13,7 +13,7 @@ namespace ExampleImplementation.Fibonacci
 
     public override long GetFibonacci(int n)
     {
-      while (n > _memo.Count())
+      while (n >= _memo.Count())
       {
         _memo.Add(_memo[_memo.Count - 1] +_memo[_memo.Count - 2]);
       }
