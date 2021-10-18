@@ -10,7 +10,25 @@ namespace ExampleImplementation.Fibonacci
   {
     public override long GetFibonacci(int n)
     {
-      throw new NotImplementedException();
+      int i = 1;
+      int a = 0;
+      int b = 1;
+      int c;
+      if (n == 0)
+      {
+        return a;
+      }
+      else if (n == 1)
+      {
+        return b;
+      }
+      do
+      {
+        c = a + b;
+        a = b;
+        b = c;
+      } while (++i < n);
+      return c;
     }
   }
 }
