@@ -25,7 +25,7 @@ namespace ExampleTestProject
   public class FibonacciTests : IDisposable, IClassFixture<FibonacciFixture>
   {
 
-    private Fibonacci impl;
+    private readonly Fibonacci impl;
 
     public FibonacciTests(FibonacciFixture fix)
     {
@@ -38,12 +38,31 @@ namespace ExampleTestProject
       // Dispose of resources if necessary
     }
 
-    private static readonly int[] _CorrectFibs = new int[] { 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765 };
+    private static IEnumerable<long> GetCorrectFibs(int length)
+    {
+      int i = 0;
+      int a = 0;
+      int b = 1;
+      if (length < 1) yield break;
+      yield return a;
+      if (length < 1) yield break;
+      yield return b;
+      int c;
+      do
+      {
+        c = a + b;
+        a = b;
+        b = c;
+        yield return c;
+      } while (i++ < length);
+    }
+
     public static IEnumerable<object[]> GetValidTestData()
     {
-      for (int i = 0; i < 21; i++)
+      int i = 0;
+      foreach (var fib in GetCorrectFibs(1000))
       {
-        yield return new object[] { i, _CorrectFibs[i] };
+        yield return new object[] { i++, fib };
       }
     }
 
@@ -53,7 +72,7 @@ namespace ExampleTestProject
     /// <param name="n"></param>
     [Theory]
     [MemberData(nameof(GetValidTestData))]
-    public void Correct_Number_Fibonacci_n(int n, int correctResult)
+    public void Correct_Number_Fibonacci_n(int n, long correctResult)
     {
       var result = impl.GetFibonacci(n);
       Assert.Equal(correctResult, result);
@@ -62,7 +81,7 @@ namespace ExampleTestProject
     [Fact]
     public void Correct_Fib_Number_7()
     {
-      Assert.Equal(13, impl.GetFibonacci(7));
+      Assert.Equal(13L, impl.GetFibonacci(7));
     }
   }
 }
