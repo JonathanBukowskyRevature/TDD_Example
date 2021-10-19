@@ -31,8 +31,8 @@ namespace ExampleTestProject
 
     public FibonacciTests(FibonacciFixture fix)
     {
-      impl = fix.GetImpl();
-      //impl = new FibonacciImpl3();
+      //impl = fix.GetImpl();
+      impl = new FibonacciImpl3();
     }
 
     public void Dispose()
@@ -105,6 +105,7 @@ namespace ExampleTestProject
     {
       Assert.Throws<ArgumentOutOfRangeException>(() => impl.GetFibonacci(-1));
       Assert.Throws<ArgumentOutOfRangeException>(() => impl.GetFibonacci(-100));
+      Assert.ThrowsAny<ArgumentException>(() => impl.GetFibonacci(-10));
     }
   }
 }

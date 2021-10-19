@@ -17,7 +17,20 @@ namespace ExampleImplementation.Fibonacci
       {
         _memo.Add(_memo[_memo.Count - 1] +_memo[_memo.Count - 2]);
       }
-      return _memo[n];
+      long result = _memo[n];
+      /*
+      try
+      {
+        result = _memo[n];
+      }
+      catch (Exception)
+      {
+         // do nothing
+      }
+      */
+
+      return result;
+
     }
   }
 }
